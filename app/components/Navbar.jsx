@@ -2,28 +2,27 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 
 function Navbar() {
-  const isSignIn = true;
-
+  const { data: session } = useSession();
+  
   const [provider, setProvider] = useState(null);
   const [dropDown, setDropDown] = useState(false);
 
   const handleDropDown = () => setDropDown((prev) => !prev);
 
   useEffect(() => {
-    const setProviders = async () => {
+    (async () => {
       const res = await getProviders();
       setProvider(res);
-    };
-    setProviders();
+    })();
   }, []);
 
   const renderMobileView = () => (
     <div className="sm:hidden flex relative">
-      {isSignIn ? (
+      {session?.user ? (
         <div className="flex">
           <Image
             src="https://www.lonelyphilosopher.com/wp-content/uploads/2021/02/saraswati.png"
@@ -60,11 +59,11 @@ function Navbar() {
         </div>
       ) : (
         provider &&
-        Object.values(provider).map((provider) => (
+        Object.values(provider).map((prov) => (
           <button
             type="button"
-            key={provider.name}
-            onClick={() => signIn(provider.id)}
+            key={prov.name}
+            onClick={() => signIn(prov.id)}
             className="hover:bg-white text-white bg-black border-black border py-1.5 px-5 hover:text-black transition-all text-sm rounded-full"
           >
             sign In
@@ -76,7 +75,7 @@ function Navbar() {
 
   const renderDesktopView = () => (
     <div className="sm:flex hidden">
-      {isSignIn ? (
+      {session?.user ? (
         <div className="flex flex-center gap-3 md:gap-5">
           <Link
             href="/create-prompt"
@@ -86,6 +85,7 @@ function Navbar() {
           </Link>
 
           <button
+            type="button"
             onClick={signOut}
             className="hover:bg-black text-black bg-white border-black border py-1.5 px-5 hover:text-white transition-all text-sm rounded-full"
           >
@@ -93,7 +93,7 @@ function Navbar() {
           </button>
           <Link href="/profile">
             <Image
-              src="https://www.lonelyphilosopher.com/wp-content/uploads/2021/02/saraswati.png"
+              src={session?.user?.image}
               width={36}
               height={36}
               alt="godessPic"
@@ -129,6 +129,7 @@ function Navbar() {
         />
         <p className="font-medium text-black text-2xl">Promptopia</p>
       </Link>
+
       {/* desktop version */}
       {renderDesktopView()}
       {/*mobile Version  */}
