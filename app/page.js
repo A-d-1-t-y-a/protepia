@@ -1,6 +1,25 @@
-import React from "react";
+"use client"
+
+import { useSession } from "next-auth/react";
 
 function Home() {
+  const { data: session } = useSession();
+  
+  const handlePrompt = async () => {
+    try {
+      const res = await fetch("/api/prompt/new", {
+        method: "POST",
+        body: JSON.stringify({
+          userId: session?.user.id,
+          prompt: "aditya",
+          tag: "Adityas",
+        }),
+      });
+      console.log("response", res);
+    } catch (e) {
+      console.log("error while posting", e);
+    }
+  };
   return (
     <div className="w-full flex flex-col flex-center">
       <h1 className="text-black font-extrabold text-5xl sm:text-6xl">
@@ -13,6 +32,14 @@ function Home() {
         Promptopia is an open-source AI prompting tool for modern world to
         discover, create and share creative prompts
       </p>
+
+      <button
+        type="button"
+        className="hover:bg-white text-white bg-black border-black border py-1.5 px-5 hover:text-black transition-all text-sm rounded-full flex items-center justify-center"
+        onClick={handlePrompt}
+      >
+        createPost
+      </button>
     </div>
   );
 }

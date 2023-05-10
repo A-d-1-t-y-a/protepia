@@ -19,9 +19,9 @@ const handler = NextAuth({
       return session;
     },
     async signIn({ profile }) {
-      try {
+      try {+
         await connectMongooseDB();
-
+        
         const userExists = await User.findOne({ email: profile.email });
 
         if (!userExists) {
