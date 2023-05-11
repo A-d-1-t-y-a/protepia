@@ -32,7 +32,7 @@ function PromptCards({ cardData, editDeleteOption }) {
     _id,
   }) => (
     <div
-      className="p-5 shadow-md m-2 sm:max-w-full md:max-w-1/2 max-w-1/2"
+      className="shadow-md m-2 flex-1 break-inside-avoid rounded-lg border border-gray-300 bg-white/20 bg-clip-padding p-6 pb-4 backdrop-blur-lg backdrop-filter md:w-[360px] w-full h-fit"
       key={_id}
     >
       <div className="flex flex-row items-center w-full">
@@ -91,7 +91,7 @@ function PromptCards({ cardData, editDeleteOption }) {
   );
 
   return (
-    <div className="flex flex-wrap w-full justify-center">
+    <div className=" space-y-6 py-8 sm:columns-2 sm:gap-6 xl:columns-3">
       {cardData.map((item) => renderCardUI(item))}
     </div>
   );

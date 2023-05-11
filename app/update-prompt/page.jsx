@@ -17,7 +17,7 @@ const CreatePageBasedId = () => {
       });
       const { prompt, tag } = await res.json();
 
-      setPrompt({ prompt, tag });
+      setPrompt({ prompt: prompt, tag: tag });
     } catch (error) {
       console.log("error", error);
     }
