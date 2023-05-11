@@ -1,27 +1,65 @@
-"use client"
+"use client";
 
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import PromptCards from "@components/PromptCards";
+import { useSearchParams } from "next/navigation";
 
 function Home() {
   const { data: session } = useSession();
-  
-  const handlePrompt = async () => {
+  const searchTermUrl = useSearchParams().get("searchTerm");
+
+  const [searchInput, setSearchInput] = useState(
+    searchTermUrl && searchTermUrl.length ? searchTermUrl : ""
+  );
+  const [searchedItems, setSearchItems] = useState([]);
+  const [allItems, setAllItems] = useState([]);
+
+  const handleSearchInput = (e) => setSearchInput(e.target.value);
+
+  const handleGetPosts = async () => {
     try {
-      const res = await fetch("/api/prompt/new", {
-        method: "POST",
-        body: JSON.stringify({
-          userId: session?.user.id,
-          prompt: "aditya",
-          tag: "Adityas",
-        }),
+      const res = await fetch("/api/prompt", {
+        method: "GET",
       });
-      console.log("response", res);
+
+      const data = await res.json();
+
+      setAllItems([...data]);
     } catch (e) {
       console.log("error while posting", e);
     }
   };
+
+  const handleFetchSearchedTerms = async (searchTerm) => {
+    try {
+      const res = await fetch(`api/search/${searchTerm}`, {
+        method: "GET",
+      });
+
+      const data = await res.json();
+      setSearchItems([...data]);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  const handleSearch = async (e) => {
+    if (e.key == "Enter" && searchInput.length)
+      handleFetchSearchedTerms(searchInput);
+    else if (searchInput.length == 0) setSearchItems([]);
+  };
+
+  useEffect(() => {
+    if (!allItems.length) handleGetPosts();
+    if (searchTermUrl?.length) {
+      setSearchInput(searchTermUrl);
+      handleFetchSearchedTerms(searchTermUrl);
+    }
+  }, [session?.user.id, searchTermUrl]);
+
   return (
-    <div className="w-full flex flex-col flex-center">
+    <section className="w-full flex flex-col flex-center">
       <h1 className="text-black font-extrabold text-5xl sm:text-6xl">
         Discover & Share
       </h1>
@@ -33,14 +71,21 @@ function Home() {
         discover, create and share creative prompts
       </p>
 
-      <button
-        type="button"
-        className="hover:bg-white text-white bg-black border-black border py-1.5 px-5 hover:text-black transition-all text-sm rounded-full flex items-center justify-center"
-        onClick={handlePrompt}
-      >
-        createPost
-      </button>
-    </div>
+      <input
+        type="text"
+        className="my-14 p-2 w-10/12 sm:w-7/12 mx-auto px-6 rounded-md shadow-lg lg:w-6/12 md:5/12 outline-none"
+        placeholder="search for a tag or a username"
+        onChange={handleSearchInput}
+        value={searchInput}
+        onKeyDown={handleSearch}
+      />
+
+      {searchInput?.length ? (
+        <PromptCards cardData={searchedItems} />
+      ) : (
+        <PromptCards cardData={allItems} />
+      )}
+    </section>
   );
 }
 

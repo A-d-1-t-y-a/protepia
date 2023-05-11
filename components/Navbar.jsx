@@ -7,7 +7,7 @@ import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 
 function Navbar() {
   const { data: session } = useSession();
-  
+
   const [provider, setProvider] = useState(null);
   const [dropDown, setDropDown] = useState(false);
 
@@ -25,10 +25,10 @@ function Navbar() {
       {session?.user ? (
         <div className="flex">
           <Image
-            src="https://www.lonelyphilosopher.com/wp-content/uploads/2021/02/saraswati.png"
+            src={session?.user?.image}
             width={36}
             height={36}
-            alt="godessPic"
+            alt="Failed to load the pic"
             className="rounded-full"
             onClick={handleDropDown}
           />
@@ -37,6 +37,7 @@ function Navbar() {
               <Link
                 href="/create-prompt"
                 className="hover:bg-white text-white bg-black border-black border py-1.5 px-5 hover:text-black transition-all text-sm rounded-full flex items-center justify-center"
+                onClick={handleDropDown}
               >
                 Create Post
               </Link>
@@ -44,12 +45,16 @@ function Navbar() {
               <Link
                 href="/profile"
                 className="hover:bg-white text-white bg-black border-black border py-1.5 px-5 hover:text-black transition-all text-sm rounded-full flex items-center justify-center my-2"
+                onClick={handleDropDown}
               >
                 profile
               </Link>
 
               <button
-                onClick={signOut}
+                onClick={() => {
+                  handleDropDown();
+                  signOut();
+                }}
                 className="hover:bg-black text-black bg-white border-black border py-1.5 px-5 hover:text-white transition-all text-sm rounded-full"
               >
                 Sign Out
