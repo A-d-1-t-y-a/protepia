@@ -15,8 +15,8 @@ function Home() {
   const [searchInput, setSearchInput] = useState(
     searchTermUrl && searchTermUrl.length ? searchTermUrl : ""
   );
-  const [searchedItems, setSearchItems] = useState([]);
   const [allItems, setAllItems] = useState([]);
+  const [searchedItems, setSearchItems] = useState([]);
 
   const handleSearchInput = (e) => setSearchInput(e.target.value);
 
@@ -30,7 +30,7 @@ function Home() {
 
       setAllItems([...data]);
     } catch (e) {
-      console.log("error while posting", e);
+      console.log("error while Getting all the posts", e);
     }
   };
 
@@ -41,6 +41,7 @@ function Home() {
       });
 
       const data = await res.json();
+
       setSearchItems([...data]);
     } catch (error) {
       console.log("error", error);
