@@ -7,8 +7,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 function MyProfile() {
   const { data: session } = useSession();
+
   const route = useRouter();
+
   const params = useSearchParams();
+  
   const id = params.get("id"),
     name = params.get("name");
 
@@ -44,7 +47,7 @@ function MyProfile() {
   }, [id]);
 
   return (
-    <>
+    <div className="w-full flex flex-col items-center">
       <div className="bg-gradient-to-r from-blue-500 to-green-300 text-transparent font-extrabold bg-clip-text text-5xl pb-2">
         {session?.user.id != id && name ? name : "My"} Profile
       </div>
@@ -57,7 +60,7 @@ function MyProfile() {
         cardData={prompts}
         editDeleteOption={session?.user.id == id ? handleEditOrDelete : null}
       />
-    </>
+    </div>
   );
 }
 

@@ -1,12 +1,15 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import PromptCards from "@components/PromptCards";
+
+import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
+
+import PromptCards from "@components/PromptCards";
 
 function Home() {
   const { data: session } = useSession();
+
   const searchTermUrl = useSearchParams().get("searchTerm");
 
   const [searchInput, setSearchInput] = useState(

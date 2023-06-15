@@ -20,6 +20,6 @@ export const connectMongooseDB = async () => {
 
     console.log("MongoDB connected");
   } catch (error) {
-    console.log(error);
+    console.log("error from db", error);
   }
 };

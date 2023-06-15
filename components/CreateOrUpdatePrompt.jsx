@@ -1,24 +1,39 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
+import { useEffect, useState } from "react";
+
 import { useSession } from "next-auth/react";
+
 import { useRouter } from "next/navigation";
 
-const CreateOrUpdate = ({ id, OldPrompt, OldTag }) => {
+import Link from "next/link";
+
+const CreateOrUpdate = ({ id }) => {
   const { data: session } = useSession();
+
   const route = useRouter();
 
-  const [prompt, setPrompt] = useState(OldPrompt);
-  const [tag, setTag] = useState(OldTag);
+  const [tag, setTag] = useState("");
+  const [prompt, setPrompt] = useState("");
   const [error, setError] = useState({
     prompt: "",
     tag: "",
   });
 
-  const handlePromptInput = (e) => setPrompt(e.target.value);
+  const handleFetchPrompt = async () => {
+    try {
+      const res = await fetch(`api/prompt/${id}`, {
+        method: "GET",
+      });
+      const { prompt, tag } = await res.json();
 
-  const handleTagInput = (e) => setTag(e.target.value);
+      setPrompt(prompt);
+
+      setTag(tag);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
 
   const handleApiCall = async (url) => {
     try {
@@ -37,7 +52,11 @@ const CreateOrUpdate = ({ id, OldPrompt, OldTag }) => {
     }
   };
 
-  const handleCreateOrUpdatePost = async () => {
+  const handlePromptInput = (e) => setPrompt(e.target.value);
+
+  const handleTagInput = (e) => setTag(e.target.value);
+
+  const handleCreateOrUpdatePost = () => {
     if (!prompt && !tag)
       setError({
         prompt: "This field is required *",
@@ -51,8 +70,12 @@ const CreateOrUpdate = ({ id, OldPrompt, OldTag }) => {
     }
   };
 
+  useEffect(() => {
+    if (id) handleFetchPrompt();
+  }, []);
+
   return (
-    <div className="mx-auto flex flex-col flex-start">
+    <div className="md:ml-10 flex flex-col">
       <p className="bg-gradient-to-r from-blue-500 to-green-300 text-transparent font-extrabold bg-clip-text text-5xl pb-4">
         {id ? "Update" : "Create"} Post
       </p>
@@ -60,7 +83,7 @@ const CreateOrUpdate = ({ id, OldPrompt, OldTag }) => {
         {id ? "Update" : "Create"} and share amazing prompts with the world and
         let your imagination run wild with any AI-powered platform
       </p>
-      <form className="w-full max-w-2xl flex flex-col gap-7 rounded-xl border border-gray-200 bg-white/20 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur p-5">
+      <div className="w-full max-w-2xl flex flex-col gap-7 rounded-xl border border-gray-200 bg-white/20 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur p-5">
         <label>
           <span className="font-semibold text-gray-700 text-base mb-3">
             Your AI Prompt
@@ -102,7 +125,7 @@ const CreateOrUpdate = ({ id, OldPrompt, OldTag }) => {
             {id ? "Update" : "Create"}
           </button>
         </div>
-      </form>
+      </div>
     </div>
   );
 };

@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
+
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 function PromptCards({ cardData, editDeleteOption }) {
   const route = useRouter();
@@ -23,7 +24,7 @@ function PromptCards({ cardData, editDeleteOption }) {
     route.push(`profile?id=${id}&name=${name}`);
 
   const handleTagNavigation = (tagName) => () =>
-    route.push(`?searchTerm=${tagName.replace("#","")}`);
+    route.push(`?searchTerm=${tagName.replace("#", "")}`);
 
   const renderCardUI = ({
     creator: { email, image, username, _id: profileId },
