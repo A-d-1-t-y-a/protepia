@@ -92,7 +92,7 @@ function PromptCards({ cardData, editDeleteOption }) {
   );
 
   return (
-    <div className=" space-y-6 py-8 sm:columns-2 sm:gap-6 xl:columns-3">
+    <div className="grid sm:grid-cols-2 sm:gap-6 xl:grid-cols-3">
       {cardData.map((item) => renderCardUI(item))}
     </div>
   );

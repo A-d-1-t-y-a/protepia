@@ -63,10 +63,10 @@ function Home() {
 
   return (
     <section className="w-full flex flex-col flex-center">
-      <h1 className="text-black font-extrabold leading-[1.15] text-5xl sm:text-6xl">
+      <h1 className="text-black font-extrabold leading-[1.15] text-5xl sm:text-6xl  text-center">
         Discover & Share
       </h1>
-      <h1 className="font-extrabold text-5xl my-2 bg-gradient-to-r from-amber-500 via-orange-600 to-yellow-500 bg-clip-text text-transparent">
+      <h1 className="font-extrabold text-5xl my-2 bg-gradient-to-r from-amber-500 via-orange-600 to-yellow-500 bg-clip-text text-transparent text-center">
         AI-Powered Prompts
       </h1>
       <p className="max-w-2xl text-center text-lg text-gray-900 sm:text-xl mt-3">
